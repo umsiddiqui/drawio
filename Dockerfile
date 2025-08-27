@@ -1,21 +1,22 @@
-FROM openjdk:8-jdk-bullseye
+FROM tomcat:9.0-jdk8-openjdk-bullseye
 
-RUN apt-get update && apt-get install -y openjdk-8-jdk ant
+# Install ant
+RUN apt-get update && apt-get install -y ant
 
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-ENV PATH=$JAVA_HOME/bin:$PATH
-
+# Copy all code for build
 COPY . /app
 
+# Build WAR with Ant
 RUN cd /app/etc/build && ant war
 
+# List WAR file to confirm creation
 RUN ls -l /app/build
-RUN ls -l /usr/local/tomcat/webapps
 
-RUN ls -l /app/build         # List build folder to confirm war exists
+# Copy WAR to Tomcat webapps folder
 RUN cp /app/build/draw.war /usr/local/tomcat/webapps/draw.war
 
-RUN ls -l /usr/local/tomcat/webapps     # List webapps folder to confirm copy
+# List contents in Tomcat webapps to confirm
+RUN ls -l /usr/local/tomcat/webapps
 
 EXPOSE 8080
 
