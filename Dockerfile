@@ -9,6 +9,9 @@ COPY . /app
 
 RUN cd /app/etc/build && ant war
 
+RUN ls -l /app/build
+RUN ls -l /usr/local/tomcat/webapps
+
 RUN ls -l /app/build         # List build folder to confirm war exists
 RUN cp /app/build/draw.war /usr/local/tomcat/webapps/draw.war
 
