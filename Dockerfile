@@ -1,20 +1,18 @@
 FROM tomcat:9-jre11-slim
 
-# Install required packages: openjdk-8-jdk and ant
 RUN apt-get update && apt-get install -y openjdk-8-jdk ant
 
-# Set JAVA_HOME (update path if needed)
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Copy entire repo to container for build
 COPY . /app
 
-# Build the WAR file using Ant
 RUN cd /app/etc/build && ant war
 
-# Copy the built WAR into Tomcat's webapps folder
+RUN ls -l /app/build         # List build folder to confirm war exists
 RUN cp /app/build/draw.war /usr/local/tomcat/webapps/draw.war
+
+RUN ls -l /usr/local/tomcat/webapps     # List webapps folder to confirm copy
 
 EXPOSE 8080
 
